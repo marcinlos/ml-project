@@ -1,5 +1,5 @@
 package pl.edu.agh.ml.killing.core;
 
-public enum Result {
-    WON, LOST
+public enum Side {
+    PLAYER, ENEMY
 }

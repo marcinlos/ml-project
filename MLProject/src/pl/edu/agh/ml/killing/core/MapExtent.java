@@ -9,14 +9,26 @@ public class MapExtent {
     private final int height;
 
     public MapExtent(int width, int height) {
-        checkArgument(width > 0);
-        checkArgument(height > 0);
+        checkArgument(width > 0, "Width non-positive");
+        checkArgument(height > 0, "Height non-positive");
         this.width = width;
         this.height = height;
     }
 
     public boolean inRange(Position pos) {
         return pos.x >= 0 && pos.x < width && pos.y >= 0 && pos.y < height;
+    }
+
+    public int width() {
+        return width;
+    }
+
+    public int height() {
+        return height;
+    }
+
+    public int area() {
+        return width() * height();
     }
 
     @Override

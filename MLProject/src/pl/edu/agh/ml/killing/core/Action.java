@@ -59,6 +59,7 @@ public interface Action {
     }
 
     public class Attack implements Action {
+
         private final Entity target;
 
         public Attack(Entity target) {
@@ -83,7 +84,7 @@ public interface Action {
         public boolean equals(Object obj) {
             if (obj instanceof Attack) {
                 Attack other = (Attack) obj;
-                return target.equals(other.target);
+                return target == other.target;
             } else {
                 return false;
             }
