@@ -3,15 +3,19 @@ package pl.edu.agh.ml.killing.game;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 import pl.edu.agh.ml.killing.core.Action;
 import pl.edu.agh.ml.killing.core.Direction;
 import pl.edu.agh.ml.killing.core.Entity;
 import pl.edu.agh.ml.killing.core.Position;
 import pl.edu.agh.ml.killing.core.Result;
+import pl.edu.agh.ml.killing.state.EntityInfo;
+import pl.edu.agh.ml.killing.state.GameState;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -31,13 +35,20 @@ public class GameEngine {
             .put(Action.Attack.class, this::performAttack)
             .build();
 
-    public GameEngine(GameConfig config) {
+    public static GameEngine create(GameConfig config) {
         BattleBuilder builder = new BattleBuilder(config);
 
-        battlefield = builder.newBattlefield();
-        player = builder.addPlayer(battlefield);
-        entityToEnemy = buildMap(builder.createEnemies(battlefield));
-        enemies = entityToEnemy.values();
+        Battlefield battlefield = builder.newBattlefield();
+        Entity player = builder.addPlayer(battlefield);
+        Set<Enemy> enemies = builder.createEnemies(battlefield);
+        return new GameEngine(battlefield, player, enemies);
+    }
+
+    private GameEngine(Battlefield battlefield, Entity player, Collection<Enemy> enemies) {
+        this.battlefield = battlefield;
+        this.player = player;
+        this.entityToEnemy = buildMap(enemies);
+        this.enemies = entityToEnemy.values();
     }
 
     private static BiMap<Entity, Enemy> buildMap(Collection<Enemy> enemies) {
@@ -87,7 +98,7 @@ public class GameEngine {
         return actions.build();
     }
 
-    public ImmutableSet<Action> availablePlayerActions() {
+    public ImmutableSet<Action> availableActions() {
         return availableActions(player);
     }
 
@@ -143,4 +154,27 @@ public class GameEngine {
         return result().isPresent();
     }
 
+    public GameState snapshot() {
+        return GameState.builder()
+                .setPlayer(player)
+                .setMapExtent(battlefield.extent())
+                .addAll(entityToEnemy.keySet())
+                .build();
+    }
+
+    public static GameEngine load(GameConfig config, GameState state) {
+        Battlefield battlefield = new Battlefield(state.mapExtent());
+        Entity player = entityFromInfo(state.player());
+
+        List<Enemy> enemies = state.enemies().stream()
+                .map(info -> new Enemy(entityFromInfo(info), config.newAI()))
+                .collect(Collectors.toList());
+
+        enemies.forEach(e -> battlefield.add(e.entity()));
+        return new GameEngine(battlefield, player, enemies);
+    }
+
+    private static Entity entityFromInfo(EntityInfo info) {
+        return new Entity(info.side(), info.hp(), info.position());
+    }
 }
