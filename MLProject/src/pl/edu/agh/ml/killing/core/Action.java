@@ -27,31 +27,31 @@ public interface Action {
 
     public class Move implements Action {
 
-        private final Position destination;
+        private final Direction direction;
 
-        public Move(Position destination) {
-            this.destination = checkNotNull(destination);
+        public Move(Direction direction) {
+            this.direction = checkNotNull(direction);
         }
 
-        public Position destination() {
-            return destination;
+        public Direction direction() {
+            return direction;
         }
 
         @Override
         public String toString() {
-            return String.format("Move(to %s)", destination);
+            return String.format("Move(to %s)", direction);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(1000, destination);
+            return Objects.hash(1000, direction);
         }
 
         @Override
         public boolean equals(Object obj) {
             if (obj instanceof Move) {
                 Move other = (Move) obj;
-                return destination.equals(other.destination);
+                return direction == other.direction;
             } else {
                 return false;
             }
@@ -60,31 +60,31 @@ public interface Action {
 
     public class Attack implements Action {
 
-        private final Entity target;
+        private final Direction direction;
 
-        public Attack(Entity target) {
-            this.target = checkNotNull(target);
+        public Attack(Direction direction) {
+            this.direction = checkNotNull(direction);
         }
 
-        public Entity target() {
-            return target;
+        public Direction direction() {
+            return direction;
         }
 
         @Override
         public String toString() {
-            return String.format("Attack(target: %s)", target);
+            return String.format("Attack(to %s)", direction);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(1001, target);
+            return Objects.hash(1001, direction);
         }
 
         @Override
         public boolean equals(Object obj) {
             if (obj instanceof Attack) {
                 Attack other = (Attack) obj;
-                return target == other.target;
+                return direction == other.direction;
             } else {
                 return false;
             }

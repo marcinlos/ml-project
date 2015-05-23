@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import pl.edu.agh.ml.killing.core.Action;
 import pl.edu.agh.ml.killing.core.Direction;
@@ -78,10 +78,10 @@ public class GameEngine {
         ImmutableSet.Builder<Action> actions = ImmutableSet.builder();
         actions.add(new Action.Idle());
 
-        forEachNeighbour(entity.position(), p -> {
+        forEachNeighbour(entity.position(), (dir, p) -> {
             battlefield.get(p)
-                    .map(e -> tryAttack(entity, e))
-                    .orElse(Optional.of(new Action.Move(p)))
+                    .map(e -> tryAttack(entity, e, dir))
+                    .orElse(Optional.of(new Action.Move(dir)))
                     .ifPresent(actions::add);
         });
         return actions.build();
@@ -91,17 +91,17 @@ public class GameEngine {
         return availableActions(player);
     }
 
-    private Optional<Action> tryAttack(Entity aggressor, Entity target) {
+    private Optional<Action> tryAttack(Entity aggressor, Entity target, Direction dir) {
         return aggressor.side() == target.side() ?
                 Optional.empty() :
-                Optional.of(new Action.Attack(target));
+                Optional.of(new Action.Attack(dir));
     }
 
-    private void forEachNeighbour(Position pos, Consumer<Position> f) {
+    private void forEachNeighbour(Position pos, BiConsumer<Direction, Position> f) {
         for (Direction d : Direction.values()) {
             Position p = pos.move(d);
             if (battlefield.extent().inRange(p)) {
-                f.accept(p);
+                f.accept(d, p);
             }
         }
     }
@@ -115,22 +115,18 @@ public class GameEngine {
     }
 
     private void performMove(Entity entity, Action.Move move) {
-        battlefield.move(entity, move.destination());
+        Position dest = entity.position().move(move.direction());
+        battlefield.move(entity, dest);
     }
 
     private void performAttack(Entity entity, Action.Attack attack) {
-        Entity target = attack.target();
-        checkState(dist(entity, target) <= 1, "Target outside range");
-        target.hurt(1);
-        if (target.isDead()) {
-            remove(target);
-        }
-    }
-
-    private static int dist(Entity a, Entity b) {
-        int dx = Math.abs(a.position().x - b.position().x);
-        int dy = Math.abs(a.position().y - b.position().y);
-        return Math.max(dx, dy);
+        Position location = entity.position().move(attack.direction());
+        battlefield.get(location).ifPresent(target -> {
+            target.hurt(1);
+            if (target.isDead()) {
+                remove(target);
+            }
+        });
     }
 
     public Optional<Result> result() {
