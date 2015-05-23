@@ -12,7 +12,7 @@ public class Entity {
     private Position position;
 
     public Entity(Side side, int hp, Position position) {
-        checkArgument(hp > 0, "Non-positive initial HP");
+        checkArgument(hp >= 0, "Negative initial HP");
         this.side = checkNotNull(side);
         this.hp = hp;
         this.position = checkNotNull(position);
@@ -34,16 +34,16 @@ public class Entity {
         position = checkNotNull(dest);
     }
 
-    public boolean isDead() {
-        return hp <= 0;
+    public boolean isAlive() {
+        return hp > 0;
     }
 
-    public boolean isAlive() {
-        return !isDead();
+    public boolean isDead() {
+        return !isAlive();
     }
 
     public void hurt(int dmg) {
-        hp -= dmg;
+        hp = Math.max(hp - dmg, 0);
     }
 
 }

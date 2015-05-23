@@ -11,13 +11,13 @@ import pl.edu.agh.ml.killing.core.Side;
 
 import com.google.common.collect.ImmutableSet;
 
-public final class GameState {
+public final class StateInfo {
 
     private final EntityInfo player;
     private final ImmutableSet<EntityInfo> enemies;
     private final MapExtent mapExtent;
 
-    private GameState(EntityInfo player, ImmutableSet<EntityInfo> enemies, MapExtent mapExtent) {
+    private StateInfo(EntityInfo player, ImmutableSet<EntityInfo> enemies, MapExtent mapExtent) {
         this.player = player;
         this.enemies = enemies;
         this.mapExtent = mapExtent;
@@ -37,8 +37,8 @@ public final class GameState {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof GameState) {
-            GameState other = (GameState) obj;
+        if (obj instanceof StateInfo) {
+            StateInfo other = (StateInfo) obj;
             return player.equals(other.player)
                     && enemies.equals(other.enemies)
                     && mapExtent.equals(other.mapExtent);
@@ -84,11 +84,11 @@ public final class GameState {
             return this;
         }
 
-        public GameState build() {
+        public StateInfo build() {
             checkNotNull(player, "Player data has not been set");
             checkNotNull(mapExtent, "Map extent has not been set");
 
-            return new GameState(player, enemies.build(), mapExtent);
+            return new StateInfo(player, enemies.build(), mapExtent);
         }
     }
 

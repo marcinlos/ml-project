@@ -15,7 +15,7 @@ import pl.edu.agh.ml.killing.core.Entity;
 import pl.edu.agh.ml.killing.core.Position;
 import pl.edu.agh.ml.killing.core.Result;
 import pl.edu.agh.ml.killing.state.EntityInfo;
-import pl.edu.agh.ml.killing.state.GameState;
+import pl.edu.agh.ml.killing.state.StateInfo;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -154,15 +154,15 @@ public class GameEngine {
         return result().isPresent();
     }
 
-    public GameState snapshot() {
-        return GameState.builder()
+    public StateInfo snapshot() {
+        return StateInfo.builder()
                 .setPlayer(player)
                 .setMapExtent(battlefield.extent())
                 .addAll(entityToEnemy.keySet())
                 .build();
     }
 
-    public static GameEngine load(GameConfig config, GameState state) {
+    public static GameEngine load(GameConfig config, StateInfo state) {
         Battlefield battlefield = new Battlefield(state.mapExtent());
         Entity player = entityFromInfo(state.player());
 

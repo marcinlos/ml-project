@@ -18,7 +18,7 @@ public final class EntityInfo {
     private final Position position;
 
     private EntityInfo(Side side, int hp, Position position) {
-        checkArgument(hp > 0, "Non-positive HP");
+        checkArgument(hp >= 0, "Negative HP");
         this.side = checkNotNull(side);
         this.hp = hp;
         this.position = checkNotNull(position);
@@ -38,6 +38,14 @@ public final class EntityInfo {
 
     public Position position() {
         return position;
+    }
+
+    public boolean isAlive() {
+        return hp > 0;
+    }
+
+    public boolean isDead() {
+        return !isAlive();
     }
 
     @Override
