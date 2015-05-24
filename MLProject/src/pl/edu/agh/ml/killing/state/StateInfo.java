@@ -4,9 +4,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import pl.edu.agh.ml.killing.core.Entity;
 import pl.edu.agh.ml.killing.core.MapExtent;
+import pl.edu.agh.ml.killing.core.Result;
 import pl.edu.agh.ml.killing.core.Side;
 
 import com.google.common.collect.ImmutableSet;
@@ -33,6 +35,20 @@ public final class StateInfo {
 
     public MapExtent mapExtent() {
         return mapExtent;
+    }
+
+    public Optional<Result> result() {
+        if (player().isDead()) {
+            return Optional.of(Result.LOST);
+        } else if (enemies().isEmpty()) {
+            return Optional.of(Result.WON);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public boolean finished() {
+        return result().isPresent();
     }
 
     @Override
