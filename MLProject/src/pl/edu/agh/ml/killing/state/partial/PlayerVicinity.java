@@ -1,5 +1,7 @@
 package pl.edu.agh.ml.killing.state.partial;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -8,6 +10,7 @@ import pl.edu.agh.ml.killing.state.EntityInfo;
 import pl.edu.agh.ml.killing.state.StateInfo;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 
 public final class PlayerVicinity {
 
@@ -17,6 +20,14 @@ public final class PlayerVicinity {
     private PlayerVicinity(EntityInfo player, ImmutableSet<EntityInfo> enemies) {
         this.player = player;
         this.enemies = enemies;
+    }
+
+    public EntityInfo player() {
+        return player;
+    }
+
+    public ImmutableSet<EntityInfo> enemies() {
+        return enemies;
     }
 
     @Override
@@ -46,6 +57,19 @@ public final class PlayerVicinity {
         state.enemies().stream()
                 .filter(e -> dist(e, player) <= radius)
                 .forEach(e -> translated.add(relative(e, origin)));
+
+        return new PlayerVicinity(relative(player, origin), translated.build());
+    }
+
+    public static PlayerVicinity closest(StateInfo state, int k) {
+        EntityInfo player = state.player();
+        Position origin = player.position();
+
+        List<EntityInfo> enemies = new ArrayList<>(state.enemies());
+        enemies.sort((a, b) -> Integer.compare(dist(a, player), dist(b, player)));
+
+        ImmutableSet.Builder<EntityInfo> translated = ImmutableSet.builder();
+        Iterables.limit(enemies, k).forEach(e -> translated.add(relative(e, origin)));
 
         return new PlayerVicinity(relative(player, origin), translated.build());
     }
