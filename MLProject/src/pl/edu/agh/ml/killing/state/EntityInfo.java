@@ -17,7 +17,7 @@ public final class EntityInfo {
 
     private final Position position;
 
-    private EntityInfo(Side side, int hp, Position position) {
+    public EntityInfo(Side side, int hp, Position position) {
         checkArgument(hp >= 0, "Negative HP");
         this.side = checkNotNull(side);
         this.hp = hp;
