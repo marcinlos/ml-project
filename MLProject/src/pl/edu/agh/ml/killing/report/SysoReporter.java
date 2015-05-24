@@ -3,11 +3,13 @@ package pl.edu.agh.ml.killing.report;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.text.MessageFormat;
-import java.util.Optional;
 
 import pl.edu.agh.ml.killing.core.Result;
+import pl.edu.agh.ml.killing.runner.GameFinishedEvent;
 
-public class SysoReporter implements Reporter {
+import com.google.common.eventbus.Subscribe;
+
+public class SysoReporter {
 
     private final int reportInterval;
 
@@ -19,11 +21,13 @@ public class SysoReporter implements Reporter {
         this.reportInterval = reportInterval;
     }
 
-    @Override
-    public void nextGame(Optional<Result> result) {
-        result.ifPresent(r -> {
-            if (r == Result.WON)
+    @Subscribe
+    public void gameFinished(GameFinishedEvent e) {
+        ++iter;
+        e.result().ifPresent(r -> {
+            if (r == Result.WON) {
                 ++won;
+            }
         });
 
         if (shouldReport()) {
@@ -32,10 +36,9 @@ public class SysoReporter implements Reporter {
             System.out.println(msg);
             won = 0;
         }
-        ++ iter;
     }
 
     private boolean shouldReport() {
-        return iter > 0 && iter % reportInterval == 0;
+        return iter % reportInterval == 0;
     }
 }

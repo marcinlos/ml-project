@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import pl.edu.agh.ml.killing.core.MapExtent;
 import pl.edu.agh.ml.killing.core.Position;
 
-public class GameConfig {
+public final class GameConfig {
 
     private final int playerHp;
     private final int enemyHp;
