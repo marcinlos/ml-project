@@ -1,10 +1,15 @@
 package pl.edu.agh.ml.killing.piql;
 
-import java.text.MessageFormat;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.Optional;
 import java.util.function.Function;
 
 import pl.edu.agh.ml.killing.RandomAI;
+import pl.edu.agh.ml.killing.core.Result;
 import pl.edu.agh.ml.killing.game.GameConfig;
+import pl.edu.agh.ml.killing.report.Reporter;
+import pl.edu.agh.ml.killing.report.SysoReporter;
 import pl.edu.agh.ml.killing.state.StateInfo;
 import pl.edu.agh.ml.killing.state.partial.PlayerVicinity;
 import referees.OnePlayerReferee;
@@ -19,16 +24,28 @@ public class ReinforcedTest<T> {
     private final OnePlayerReferee referee;
     private final QLearningSelector selector;
 
+    private final Optional<Reporter> reporter;
+
     private double gamma = 1.0;
     private double epsilon = 0.5;
 
-    public ReinforcedTest(GameConfig config, Function<StateInfo, T> mapper) {
+    private ReinforcedTest(GameConfig config, Function<StateInfo, T> mapper,
+            Optional<Reporter> reporter) {
         this.environment = new PiqleEnvironment<>(config, mapper);
         this.selector = new QLearningSelector();
         this.agent = new AbstractAgent(environment, selector);
         this.referee = new OnePlayerReferee(agent);
+        this.reporter = checkNotNull(reporter);
 
         configure();
+    }
+
+    public ReinforcedTest(GameConfig config, Function<StateInfo, T> mapper) {
+        this(config, mapper, Optional.empty());
+    }
+
+    public ReinforcedTest(GameConfig config, Function<StateInfo, T> mapper, Reporter reporter) {
+        this(config, mapper, Optional.of(reporter));
     }
 
     private void configure() {
@@ -41,22 +58,25 @@ public class ReinforcedTest<T> {
         selector.setEpsilon(epsilon);
     }
 
-    public void run(int iters, int N) {
-        int won = 0;
+    public void run(int iters) {
         for (int i = 0; i < iters; ++i) {
             referee.episode(environment.defaultInitialState());
-            if (referee.getWinner() == -1) {
-                won += 1;
-            }
-            if (i > 0 && i % N == 0) {
-                String msg = MessageFormat.format("After {0}: {1} / {2} ({3,number,#.##%})", i,
-                        won, N, won / (double) N);
-                System.out.println(msg);
-                won = 0;
-            }
+            reporter.ifPresent(r -> r.nextGame(resultFrom(referee.getWinner())));
+
             // Decay epsilon
             epsilon *= 0.99999;
             setSelectorParams();
+        }
+    }
+
+    private Optional<Result> resultFrom(int r) {
+        switch (r) {
+        case -1:
+            return Optional.of(Result.WON);
+        case 1:
+            return Optional.of(Result.LOST);
+        default:
+            return Optional.empty();
         }
     }
 
@@ -70,8 +90,10 @@ public class ReinforcedTest<T> {
                 .build();
 
         int radius = 2;
+        int iters = 15000;
+
         ReinforcedTest<PlayerVicinity> test = new ReinforcedTest<>(config,
-                PlayerVicinity.withRadius(radius));
-        test.run(15000, 500);
+                PlayerVicinity.withRadius(radius), new SysoReporter(500));
+        test.run(iters);
     }
 }
