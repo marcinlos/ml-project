@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import pl.edu.agh.ml.killing.core.Action;
 import pl.edu.agh.ml.killing.game.GameEngine;
+import pl.edu.agh.ml.killing.runner.events.GameFinishedEvent;
+import pl.edu.agh.ml.killing.runner.events.RoundEvent;
 import pl.edu.agh.ml.killing.state.StateInfo;
 
 import com.google.common.eventbus.EventBus;
@@ -32,14 +34,20 @@ public class Driver {
         GameEngine game = GameEngine.create(config.gameConfig());
 
         int round = 0;
+        StateInfo state = game.snapshot();
         while (!game.finished() && round < config.maxGameRounds()) {
-            StateInfo state = game.snapshot();
             Action action = player.chooseAction(state, game.availableActions());
             game.playRound(action);
+            state = game.snapshot();
+            post(new RoundEvent(action, state));
         }
 
         player.gameFinished(game.result());
-        eventBus.ifPresent(bus -> bus.post(GameFinishedEvent.from(game)));
+        post(GameFinishedEvent.from(game));
+    }
+
+    private void post(Object o) {
+        eventBus.ifPresent(bus -> bus.post(o));
     }
 
 }

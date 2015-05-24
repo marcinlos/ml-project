@@ -1,4 +1,4 @@
-package pl.edu.agh.ml.killing.runner;
+package pl.edu.agh.ml.killing.runner.events;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

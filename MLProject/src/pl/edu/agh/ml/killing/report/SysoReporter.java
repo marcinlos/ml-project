@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.text.MessageFormat;
 
 import pl.edu.agh.ml.killing.core.Result;
-import pl.edu.agh.ml.killing.runner.GameFinishedEvent;
+import pl.edu.agh.ml.killing.runner.events.GameFinishedEvent;
 
 import com.google.common.eventbus.Subscribe;
 

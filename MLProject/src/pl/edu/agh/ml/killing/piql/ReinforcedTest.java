@@ -9,7 +9,7 @@ import pl.edu.agh.ml.killing.RandomAI;
 import pl.edu.agh.ml.killing.core.Result;
 import pl.edu.agh.ml.killing.game.GameConfig;
 import pl.edu.agh.ml.killing.report.SysoReporter;
-import pl.edu.agh.ml.killing.runner.GameFinishedEvent;
+import pl.edu.agh.ml.killing.runner.events.GameFinishedEvent;
 import pl.edu.agh.ml.killing.state.StateInfo;
 import pl.edu.agh.ml.killing.state.partial.PlayerVicinity;
 import referees.OnePlayerReferee;
