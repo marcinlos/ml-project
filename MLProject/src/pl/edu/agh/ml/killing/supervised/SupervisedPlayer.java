@@ -95,7 +95,7 @@ class SupervisedPlayer<T> implements Player {
     }
 
     @Override
-    public void gameFinished(Optional<Result> result) {
+    public void gameFinished(StateInfo state, Optional<Result> result) {
         classifier.update();
     }
 

@@ -12,6 +12,6 @@ public interface Player {
 
     Action chooseAction(StateInfo state, ImmutableSet<Action> availableActions);
 
-    void gameFinished(Optional<Result> result);
+    void gameFinished(StateInfo state, Optional<Result> result);
 
 }

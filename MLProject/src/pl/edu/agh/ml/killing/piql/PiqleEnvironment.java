@@ -67,7 +67,7 @@ public class PiqleEnvironment<T> extends AbstractEnvironmentSingle {
         return reward(info(s1), info(s2));
     }
 
-    private double reward(StateInfo s1, StateInfo s2) {
+    public double reward(StateInfo s1, StateInfo s2) {
         if (s2.player().isDead()) {
             return 0;
         }

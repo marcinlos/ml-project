@@ -42,7 +42,7 @@ public class Driver {
             post(new RoundEvent(action, state));
         }
 
-        player.gameFinished(game.result());
+        player.gameFinished(state, game.result());
         post(GameFinishedEvent.from(game));
     }
 
