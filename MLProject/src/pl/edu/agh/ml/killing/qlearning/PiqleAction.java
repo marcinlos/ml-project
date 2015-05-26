@@ -1,13 +1,13 @@
-package pl.edu.agh.ml.killing.piql;
+package pl.edu.agh.ml.killing.qlearning;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import pl.edu.agh.ml.killing.core.Action;
 import environment.IAction;
 
 public class PiqleAction implements IAction {
-    
+
     private final Action action;
-    
+
     public PiqleAction(Action action) {
         this.action = checkNotNull(action);
     }

@@ -1,4 +1,4 @@
-package pl.edu.agh.ml.killing.piql;
+package pl.edu.agh.ml.killing.qlearning;
 
 import java.util.Optional;
 
