@@ -16,7 +16,7 @@ public class TestParams {
     public Integer gameCount = 10000;
 
     @Parameter(names = "--max-rounds")
-    public Integer maxGameRounds = 1000;
+    public Integer maxGameRounds = 5000;
 
     @Parameter(names = "--report-interval")
     public Integer reportInterval = 500;
