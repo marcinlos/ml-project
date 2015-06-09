@@ -128,6 +128,11 @@ public class QLearningConfig {
             return this;
         }
 
+        public Builder withMaybeLambda(Optional<Double> lambda) {
+            lambda.ifPresent(this::withLambda);
+            return this;
+        }
+
         public QLearningConfig build() {
             checkState(algorithm == Algorithm.BASIC || lambda.isPresent(), "Lambda not specified");
             return new QLearningConfig(algorithm, initEpsilon, learningRate, discountFactor,

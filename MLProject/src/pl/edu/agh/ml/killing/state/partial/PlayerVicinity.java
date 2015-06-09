@@ -74,6 +74,10 @@ public final class PlayerVicinity {
         return new PlayerVicinity(relative(player, origin), translated.build());
     }
 
+    public static Function<StateInfo, PlayerVicinity> closest(int k) {
+        return info -> closest(info, k);
+    }
+
     private static EntityInfo relative(EntityInfo entity, Position origin) {
         return new EntityInfo(entity.side(), entity.hp(), diff(entity.position(), origin));
     }

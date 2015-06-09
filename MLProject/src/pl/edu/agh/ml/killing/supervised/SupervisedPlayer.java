@@ -18,7 +18,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-class SupervisedPlayer<T> implements Player {
+public class SupervisedPlayer<T> implements Player {
 
     private final int windowSize;
     private final SlidingWindow<TurnEntry<StateInfo>> window;

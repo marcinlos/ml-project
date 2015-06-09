@@ -44,7 +44,7 @@ public class Main {
         int closest = 1;
         Function<StateInfo, PlayerVicinity> f = info -> PlayerVicinity.closest(info, closest);
         WekaFormat<GameFragment<PlayerVicinity>> format = new WekaClosestEnemies(windowSize, closest);
-        GameFragmentClassifier<PlayerVicinity> classifier = new WekaClassifier<PlayerVicinity>(format, () -> new J48());
+        GameFragmentClassifier<PlayerVicinity> classifier = new WekaClassifier<PlayerVicinity>(format, J48::new);
 
         Player player = new SupervisedPlayer<PlayerVicinity>(windowSize, f, classifier);
 
