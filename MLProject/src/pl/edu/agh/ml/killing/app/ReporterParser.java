@@ -4,6 +4,7 @@ import java.util.function.Function;
 
 import pl.edu.agh.ml.killing.report.ActionStatistics;
 import pl.edu.agh.ml.killing.report.SysoReporter;
+import pl.edu.agh.ml.killing.report.TestReporter;
 
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.ParameterException;
@@ -15,6 +16,7 @@ public class ReporterParser implements IStringConverter<Function<Integer, ?>> {
             ImmutableMap.<String, Function<Integer, ?>> builder()
                     .put("ActionStatistics", ActionStatistics::new)
                     .put("SysoReporter", SysoReporter::new)
+                    .put("TestReporter", TestReporter::new)
                     .build();
 
     @Override
