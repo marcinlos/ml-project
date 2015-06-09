@@ -7,9 +7,7 @@ import pl.edu.agh.ml.killing.game.EnemyAI;
 import pl.edu.agh.ml.killing.game.GameConfig;
 
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 
-@Parameters(separators = "=")
 public class GameParams {
 
     @Parameter(names = "--map-width")

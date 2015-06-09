@@ -9,9 +9,7 @@ import pl.edu.agh.ml.killing.qlearning.QLearningPlayer;
 import pl.edu.agh.ml.killing.runner.Player;
 
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 
-@Parameters(separators = "=")
 public class QLearningParams {
 
     @Parameter(names = "--algorithm", converter = QLearningAlgorithmParser.class)

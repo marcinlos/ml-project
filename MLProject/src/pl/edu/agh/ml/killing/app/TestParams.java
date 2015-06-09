@@ -9,9 +9,7 @@ import pl.edu.agh.ml.killing.game.GameConfig;
 import pl.edu.agh.ml.killing.runner.TestConfig;
 
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 
-@Parameters(separators = "=")
 public class TestParams {
 
     @Parameter(names = "--game-count")

@@ -6,9 +6,7 @@ import pl.edu.agh.ml.killing.state.StateInfo;
 import pl.edu.agh.ml.killing.state.partial.PlayerVicinity;
 
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 
-@Parameters(separators = "=")
 public class StateParams {
 
     @Parameter(names = "--state-size", description = "State parameter, meaning depends on state type")
