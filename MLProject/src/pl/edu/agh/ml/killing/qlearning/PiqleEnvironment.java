@@ -69,11 +69,15 @@ public class PiqleEnvironment<T> extends AbstractEnvironmentSingle {
 
     public double reward(StateInfo s1, StateInfo s2) {
         if (s2.player().isDead()) {
-            return 0;
+            return -10;
+        }
+        int nextEnemyCount = s2.enemies().size();
+        if (nextEnemyCount == 0) {
+            return 10;
         }
         int dHp = s2.player().hp() - s1.player().hp();
-        int dCount = s2.enemies().size() - s1.enemies().size();
-        return config.playerHp() + dHp + dCount;
+        int dCount = nextEnemyCount - s1.enemies().size();
+        return dHp - 2 * dCount;
     }
 
     @Override
