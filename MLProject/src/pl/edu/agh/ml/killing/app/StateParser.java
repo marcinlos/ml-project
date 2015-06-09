@@ -9,7 +9,7 @@ import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.ParameterException;
 import com.google.common.collect.ImmutableMap;
 
-class StateParser implements IStringConverter<Function<Integer, Function<StateInfo, ?>>> {
+public class StateParser implements IStringConverter<Function<Integer, Function<StateInfo, ?>>> {
 
     private static final ImmutableMap<String, Function<Integer, Function<StateInfo, ?>>> STATE_TYPES =
             ImmutableMap.<String, Function<Integer, Function<StateInfo, ?>>> builder()
