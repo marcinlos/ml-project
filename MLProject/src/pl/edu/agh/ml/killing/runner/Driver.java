@@ -40,10 +40,11 @@ public class Driver {
             game.playRound(action);
             state = game.snapshot();
             post(new RoundEvent(action, state));
+            ++round;
         }
 
         player.gameFinished(state, game.result());
-        post(GameFinishedEvent.from(game));
+        post(new GameFinishedEvent(round, game.result()));
     }
 
     private void post(Object o) {
